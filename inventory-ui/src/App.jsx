@@ -6,14 +6,18 @@ import ProductList from './components/ProductList'
 import ProductForm from './components/ProductForm'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [products, setProducts] = useState([]);
+
+  const addProduct = (product) => {
+    setProducts([...products,product]);
+  }
 
   return (
     <>
       <div>
         <h1>Inventory Management System</h1>
-        <ProductForm />
-        <ProductList />
+        <ProductForm onAddProduct={addProduct}/>
+        <ProductList products={products}/>
       </div>
     </>
   )
