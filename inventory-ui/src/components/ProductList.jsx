@@ -1,9 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import api from '../api/axios';
 
-function ProductList({products}) {
+function ProductList() {
+  const[products,setProducts] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    api.get("/products")
+    .then((response) => {
+      setProducts(response.data);
+    })
+    .catch(() => {
+      setError("Failed to load products");
+    });
+  
+  }, [])
+  
+
+
   return (
     <div>
          <h2>Product List</h2>
+         {error && <p style={{color: "red"}}>{error}</p>}
         {products.length === 0 ? (
           <p>No products available</p>
         ):(
