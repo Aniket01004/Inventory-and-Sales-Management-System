@@ -1,28 +1,36 @@
 import React, { useState } from 'react'
+import api from '../api/axios';
 
-function ProductForm({onAddProduct}) {
+function ProductForm({onProductAdded}) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
-    const product = {
-      name,
-      price,
-      quantity
+    const payload = {
+      name: name.trim(),
+      price: Number(price),
+      quantity: Number(quantity),
+    };
+    console.log("Sending payload:",payload);
+    
+    try{
+      await api.post("/products",payload);
+      onProductAdded();
+    }catch(err){
+      console.error("API error:", err.response || err.message);
+      setError("Failed to add product");
     }
-
-    onAddProduct(product);
-
-    setName("");
-    setPrice("");
-    setQuantity("");
+    
   }
   return (
     <form onSubmit={handleSubmit}>
         <h2>Add Product</h2>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
         <input 
         placeholder='Product Name'
         value={name}

@@ -6,18 +6,18 @@ import ProductList from './components/ProductList'
 import ProductForm from './components/ProductForm'
 
 function App() {
-  const [products, setProducts] = useState([]);
+  const [reload, setReload] = useState(false);
 
-  const addProduct = (product) => {
-    setProducts([...products,product]);
+  const refreshProducts = () => {
+    setReload(!reload);
   }
 
   return (
     <>
       <div>
         <h1>Inventory Management System</h1>
-        <ProductForm onAddProduct={addProduct}/>
-        <ProductList products={products}/>
+        <ProductForm onProductAdded={refreshProducts}/>
+        <ProductList key={reload}/>
       </div>
     </>
   )
