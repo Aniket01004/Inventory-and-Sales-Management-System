@@ -1,6 +1,12 @@
 package com.example.inventory_sales_management.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
+
+
 @Entity
 @Table(name = "products")
 
@@ -8,11 +14,13 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @NotBlank (message = "Product name is required")
     private String name;
-    @Column(nullable = false)
+    @NotNull(message = "Price is required")
+    @PositiveOrZero(message = "Price must be zero or positive")
     private Double price;
-    @Column(nullable = false)
+    @NotNull(message = "Quantity is required")
+    @PositiveOrZero(message = "Quantity must be zero or positive")
     private Integer quantity;
 
     public Product() {
