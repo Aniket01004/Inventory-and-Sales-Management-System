@@ -3,6 +3,7 @@ package com.example.inventory_sales_management.controller;
 import com.example.inventory_sales_management.model.Product;
 import com.example.inventory_sales_management.service.ProductService;
 import com.example.inventory_sales_management.service.ProductServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ProductController {
 
     // Create
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product){
         Product savedProduct = productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
@@ -46,7 +47,7 @@ public class ProductController {
 
     // Update
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id,@RequestBody Product product){
+    public ResponseEntity<?> updateProduct(@PathVariable Long id,@Valid @RequestBody Product product){
         try{
             Product updated = productService.updateProduct(id , product);
             return ResponseEntity.ok(updated);
