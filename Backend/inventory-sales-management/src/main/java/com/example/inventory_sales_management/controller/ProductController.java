@@ -1,6 +1,7 @@
 package com.example.inventory_sales_management.controller;
 
 import com.example.inventory_sales_management.model.Product;
+import com.example.inventory_sales_management.model.TransactionType;
 import com.example.inventory_sales_management.service.ProductService;
 import com.example.inventory_sales_management.service.ProductServiceImpl;
 import jakarta.validation.Valid;
@@ -68,8 +69,18 @@ public class ProductController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found with id " + id);
         }
-
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{id}/stock")
+    public ResponseEntity<?> updateStock(
+            @PathVariable Long id,
+            @RequestParam Integer quantity,
+            @RequestParam TransactionType type
+            ){
+        productService.updateStock(id , quantity, type);
+        return ResponseEntity.ok("Stock updated successfully");
 
     }
+
 
 }
