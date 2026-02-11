@@ -1,19 +1,9 @@
 package com.example.inventory_sales_management.service;
 
-import com.example.inventory_sales_management.repository.UserRepository;
-import org.springframework.stereotype.Service;
+import com.example.inventory_sales_management.model.User;
 
-@Service
-public class AuthService {
-    private final UserRepository userRepository;
+public interface AuthService {
 
-    private AuthService(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
+    User authenticate(String username, String password);
 
-    public boolean login(String username, String password){
-        return userRepository.findByUsername(username)
-                .map(user -> user.getPassword().equals(password))
-                .orElse(false);
-    }
 }
