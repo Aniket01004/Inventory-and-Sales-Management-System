@@ -3,6 +3,7 @@ package com.example.inventory_sales_management.controller;
 import com.example.inventory_sales_management.model.User;
 import com.example.inventory_sales_management.security.JwtUtil;
 import com.example.inventory_sales_management.service.AuthService;
+import io.jsonwebtoken.Jwts;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,19 +25,24 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
 
-        boolean isValid =
-                authService.login(user.getUsername(), user.getPassword());
+        User dbUser = authService.authenticate(
+                user.getUsername(), user.getPassword()
+        );
 
-        if (!isValid) {
+        if (dbUser == null) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid username or password");
+                    .body("Invalid credentials");
         }
 
-        String token = jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(
+                dbUser.getUsername(),
+                dbUser.getRole().name()
+        );
 
         return ResponseEntity.ok(
                 Map.of("token", token)
         );
+
     }
 }

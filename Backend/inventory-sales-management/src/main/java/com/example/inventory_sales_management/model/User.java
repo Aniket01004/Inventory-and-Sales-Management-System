@@ -1,9 +1,6 @@
 package com.example.inventory_sales_management.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class User {
@@ -13,6 +10,8 @@ public class User {
     private String username;
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
     public String getUsername() {
         return username;
     }
@@ -27,5 +26,12 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
