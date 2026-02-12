@@ -1,6 +1,7 @@
 package com.example.inventory_sales_management.service;
 import com.example.inventory_sales_management.model.Product;
 import com.example.inventory_sales_management.model.TransactionType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -13,5 +14,6 @@ public interface ProductService {
 
     void updateStock(Long id, Integer quantity, TransactionType type);
 
-    void processSale(Long id, Integer quantity);
+    List<Product> getLowStockProducts(Integer threshold);
+
 }
