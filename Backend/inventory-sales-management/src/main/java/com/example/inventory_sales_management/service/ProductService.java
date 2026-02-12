@@ -12,4 +12,6 @@ public interface ProductService {
     void deleteProduct(Long id);
 
     void updateStock(Long id, Integer quantity, TransactionType type);
+
+    void processSale(Long id, Integer quantity);
 }
