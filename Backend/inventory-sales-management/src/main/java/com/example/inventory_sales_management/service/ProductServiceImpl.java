@@ -71,22 +71,8 @@ public class ProductServiceImpl implements ProductService {
         stockTransactionRepository.save(transaction);
     }
 
-    @Transactional
-    public void processSale(Long productId,Integer quantity){
-        Product product = productRepository.findById(productId)
-                .orElseThrow(()->new RuntimeException("Product not found"));
-        if (quantity == null || quantity <= 0) {
-            throw new RuntimeException("Quantity must be greater than 0");
-        }
-
-        product.setQuantity(product.getQuantity() - quantity);
-        productRepository.save(product);
-
-        Sale sale = new Sale();
-        sale.setProduct(product);
-        sale.setQuantity(quantity);
-        sale.setTotalPrice(product.getPrice() * quantity);
-        sale.setSaleDate(LocalDateTime.now());
-        saleRepository.save(sale);
+    public List<Product> getLowStockProducts(Integer threshold){
+        return productRepository.findByQuantityLessThan(threshold);
     }
+
 }

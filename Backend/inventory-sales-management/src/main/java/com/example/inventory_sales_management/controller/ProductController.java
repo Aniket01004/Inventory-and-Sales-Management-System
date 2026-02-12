@@ -3,13 +3,12 @@ package com.example.inventory_sales_management.controller;
 import com.example.inventory_sales_management.model.Product;
 import com.example.inventory_sales_management.model.TransactionType;
 import com.example.inventory_sales_management.service.ProductService;
-import com.example.inventory_sales_management.service.ProductServiceImpl;
+import com.example.inventory_sales_management.service.SaleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +17,12 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
+    private final SaleService saleService;
 
-    public ProductController(ProductService productService){
+    public ProductController(ProductService productService,SaleService saleService)
+    {
         this.productService = productService;
+        this.saleService = saleService;
     }
 
     // Create
@@ -78,8 +80,13 @@ public class ProductController {
             @RequestParam Integer quantity,
             @RequestParam TransactionType type
             ){
-        productService.updateStock(id , quantity, type);
-        return ResponseEntity.ok("Stock updated successfully");
+        try {
+            productService.updateStock(id, quantity, type);
+            return ResponseEntity.ok("Stock updated successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
 
     }
 
@@ -90,13 +97,23 @@ public class ProductController {
             @RequestParam Integer quantity
     ){
         try{
-            productService.processSale(id, quantity);
+            saleService.processSale(id, quantity);
             return ResponseEntity.ok("Sale processed successfully");
         }catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
         }
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/low-stock")
+   public ResponseEntity<List<Product>> getLowStockProducts(
+           @RequestParam(defaultValue = "5")Integer threshold
+    ){
+        return ResponseEntity.ok(productService.getLowStockProducts(threshold));
+    }
+
+
 
 
 }
