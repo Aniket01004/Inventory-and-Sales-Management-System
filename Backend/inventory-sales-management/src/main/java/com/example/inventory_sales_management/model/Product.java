@@ -23,6 +23,9 @@ public class Product {
     @PositiveOrZero(message = "Quantity must be zero or positive")
     private Integer quantity;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public Product() {
     }
 
@@ -58,5 +61,13 @@ public class Product {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public void setImageUrl(String fileName) {
+        this.imageUrl = fileName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

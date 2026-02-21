@@ -15,7 +15,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User authenticate(String username, String password) {
+
         return userRepository.findByUsername(username)
+                .map(user -> {
+                    System.out.println("DB password: " + user.getPassword());
+                    System.out.println("Entered password: " + password);
+                    return user;
+                })
                 .filter(user -> user.getPassword().equals(password))
                 .orElse(null);
     }
