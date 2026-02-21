@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,10 +19,8 @@ import java.util.List;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-
     @Autowired
     private JwtUtil jwtUtil;
-
 
     @Override
     protected void doFilterInternal(
@@ -41,35 +39,27 @@ public class JwtFilter extends OncePerRequestFilter {
                 String username = jwtUtil.extractUsername(token);
                 String role = jwtUtil.extractRole(token);
 
-                if (username != null && role != null) {
+                if (username != null && role != null &&
+                        SecurityContextHolder.getContext().getAuthentication() == null) {
 
                     SimpleGrantedAuthority authority =
                             new SimpleGrantedAuthority("ROLE_" + role);
 
-                    UserDetails userDetails =
-                            new org.springframework.security.core.userdetails.User(
-                                    username,
-                                    "",
-                                    List.of(authority)
-                            );
-
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
-                                    userDetails,
+                                    username,
                                     null,
-                                    userDetails.getAuthorities()
+                                    List.of(authority)
                             );
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
 
             } catch (Exception e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                SecurityContextHolder.clearContext();
             }
         }
 
         filterChain.doFilter(request, response);
     }
-
 }
