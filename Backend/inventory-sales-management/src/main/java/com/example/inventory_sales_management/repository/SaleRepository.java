@@ -3,16 +3,21 @@ package com.example.inventory_sales_management.repository;
 import com.example.inventory_sales_management.model.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-public interface SaleRepository extends JpaRepository<Sale,Long> {
-@Query("""
-        SELECT SUM(s.totalPrice) FROM Sale s WHERE DATE(s.saleDate) = CURRENT_DATE
-        """)
-    Double getTodaySalesTotal();
+import java.time.LocalDateTime;
 
-@Query("""
-        SELECT SUM(s.totalPrice) FROM Sale s WHERE MONTH(s.saleDate) = MONTH(CURRENT_DATE)
-        AND YEAR(s.saleDate) = YEAR(CURRENT_DATE)
-        """)
-    Double getMonthlySalesTotal();
+public interface SaleRepository extends JpaRepository<Sale, Long> {
+
+    // Reusable method for any date range (daily, monthly, custom)
+    @Query("""
+        SELECT COALESCE(SUM(s.totalPrice), 0)
+        FROM Sale s
+        WHERE s.saleDate >= :start
+        AND s.saleDate < :end
+    """)
+    Double getSalesBetween(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }
