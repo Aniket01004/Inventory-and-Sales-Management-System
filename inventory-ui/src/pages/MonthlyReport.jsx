@@ -11,7 +11,7 @@ function MonthlyReport() {
 
   const fetchMonthlyData = async () => {
     try {
-      const res = await api.get("/sales");
+      const res = await api.get("/api/sales");
 
       const now = new Date();
       const currentMonth = now.getMonth();

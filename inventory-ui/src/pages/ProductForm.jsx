@@ -18,7 +18,7 @@ function ProductForm({onProductAdded}) {
     formData.append("quantity", quantity);
     formData.append("image", image); // this must be state
 
-    await api.post("/products/with-image", formData);
+    await api.post("/api/products/with-image", formData);
 
     alert("Product added successfully");
 
@@ -57,7 +57,7 @@ function ProductForm({onProductAdded}) {
         onChange={(e) => setQuantity(e.target.value)}
         />
 
-        <button type='submit' onClick={handleSubmit}>Add</button>
+       <button type="submit">Add</button>
     </form>
   );
 }

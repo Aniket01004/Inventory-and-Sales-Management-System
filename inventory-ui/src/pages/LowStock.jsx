@@ -10,7 +10,7 @@ function LowStock() {
 
   const fetchLowStock = async () => {
     try {
-      const res = await api.get("/products/low-stock?threshold=5");
+      const res = await api.get("/api/products/low-stock?threshold=5");
       setProducts(res.data);
     } catch (err) {
       console.error("Unable to fetch low stock products", err);

@@ -7,7 +7,7 @@ function DeleteProduct() {
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      await api.delete(`/products/${id}`);
+      await api.delete(`/api/products/${id}`);
       alert("Product deleted successfully");
     } catch (err) {
       alert("Error deleting product");

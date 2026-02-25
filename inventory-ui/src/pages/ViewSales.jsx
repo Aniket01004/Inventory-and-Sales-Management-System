@@ -10,7 +10,7 @@ function ViewSales() {
 
   const fetchSales = async () => {
     try {
-      const res = await api.get("/sales");
+      const res = await api.get("/api/sales");
       // Sort newest first
       const sorted = res.data.sort(
         (a, b) => new Date(b.saleDate) - new Date(a.saleDate)

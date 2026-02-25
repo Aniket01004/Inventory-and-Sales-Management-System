@@ -6,7 +6,6 @@ export function getAuth() {
     const payload = JSON.parse(atob(token.split(".")[1]));
     return {
       token,
-      username: payload.sub,
       role: payload.role,
     };
   } catch {

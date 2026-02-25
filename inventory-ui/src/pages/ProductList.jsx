@@ -13,7 +13,7 @@ function ProductList() {
 
   const fetchProducts = async () => {
     try {
-      const res = await api.get("/products");
+      const res = await api.get("/api/products");
       setProducts(res.data);
     } catch (err) {
       console.error("Error fetching products", err);
@@ -27,7 +27,7 @@ function ProductList() {
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`/products/${id}`);
+      await api.delete(`/api/products/${id}`);
       setProducts(products.filter((p) => p.id !== id));
     } catch (err) {
       alert("Failed to delete product");
@@ -35,8 +35,8 @@ function ProductList() {
   };
 
   const handleEdit = (product) => {
-    navigate("/products/update", { state: product });
-  };
+  navigate(`/products/update/${product.id}`);
+};
 
   // 🔎 Filtered Products
   const filteredProducts = products.filter((product) =>
@@ -71,7 +71,7 @@ function ProductList() {
             <div className="h-40 mb-4 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
               {product.imageUrl ? (
                 <img
-                  src={`http://localhost:8080/uploads/${product.imageUrl}`}
+                  src={product.imageUrl}
                   alt={product.name}
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />

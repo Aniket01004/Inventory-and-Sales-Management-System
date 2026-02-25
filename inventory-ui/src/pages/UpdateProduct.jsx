@@ -1,21 +1,35 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
 
 function UpdateProduct() {
-  const location = useLocation();
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const product = location.state;
-
- if (!product) {
-    navigate("/products", { replace: true });
-    return null;
-  }
-  const [name, setName] = useState(product.name);
-  const [price, setPrice] = useState(product.price);
-  const [quantity, setQuantity] = useState(product.quantity);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchProduct = async () => {
+      try {
+        const res = await api.get(`/api/products/${id}`);
+        const product = res.data;
+
+        setName(product.name);
+        setPrice(product.price);
+        setQuantity(product.quantity);
+      } catch (err) {
+        console.error(err);
+        navigate("/products");
+      }
+    };
+
+    fetchProduct();
+  }, [id, navigate]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -31,12 +45,10 @@ function UpdateProduct() {
       }
 
       await api.put(
-        `/products/${product.id}/with-image`,
+        `/api/products/${id}/with-image`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
@@ -64,6 +76,7 @@ function UpdateProduct() {
             onChange={(e) => setName(e.target.value)}
             className="w-full border rounded-lg px-4 py-2"
             placeholder="Product Name"
+            required
           />
 
           <input
@@ -72,6 +85,7 @@ function UpdateProduct() {
             onChange={(e) => setPrice(e.target.value)}
             className="w-full border rounded-lg px-4 py-2"
             placeholder="Price"
+            required
           />
 
           <input
@@ -80,6 +94,7 @@ function UpdateProduct() {
             onChange={(e) => setQuantity(e.target.value)}
             className="w-full border rounded-lg px-4 py-2"
             placeholder="Quantity"
+            required
           />
 
           <input

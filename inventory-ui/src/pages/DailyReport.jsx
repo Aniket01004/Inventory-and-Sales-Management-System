@@ -11,7 +11,7 @@ function DailyReport() {
 
   const fetchDailyData = async () => {
     try {
-      const res = await api.get("/sales"); // reuse sales endpoint
+      const res = await api.get("/api/sales"); // reuse sales endpoint
 
       const today = new Date().toISOString().split("T")[0];
 

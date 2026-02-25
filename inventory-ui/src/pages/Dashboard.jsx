@@ -14,10 +14,10 @@ const navigate = useNavigate();
     try {
 
       // ✅ No manual headers
-      const summaryRes = await api.get("/dashboard/summary");
+      const summaryRes = await api.get("/api/dashboard/summary");
 
       const lowStockRes = await api.get(
-        "/products/low-stock?threshold=5"
+        "/api/products/low-stock?threshold=5"
       );
 
       setSummary(summaryRes.data);

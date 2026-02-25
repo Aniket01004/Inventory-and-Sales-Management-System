@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -18,8 +18,8 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
+      const response = await api.post(
+        "/api/auth/login",
         { username, password }
       );
 

@@ -25,7 +25,7 @@ function AddProduct() {
         formData.append("image", image);
       }
 
-      await api.post("/products/with-image", formData);
+      await api.post("/api/products/with-image", formData);
 
       setMessage("Product added successfully");
       setName("");

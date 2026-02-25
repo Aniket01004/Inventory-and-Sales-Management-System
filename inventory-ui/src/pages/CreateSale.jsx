@@ -15,7 +15,7 @@ function CreateSale() {
 
   const fetchProducts = async () => {
     try {
-      const res = await api.get("/products");
+      const res = await api.get("/api/products");
       setProducts(res.data);
     } catch (err) {
       console.error("Failed to fetch products");
@@ -47,7 +47,7 @@ function CreateSale() {
 
     try {
       await api.post(
-        `/products/${selectedProductId}/sale?quantity=${quantity}`
+        `/api/products/${selectedProductId}/sale?quantity=${quantity}`
       );
 
       setMessage("Sale created successfully!");
