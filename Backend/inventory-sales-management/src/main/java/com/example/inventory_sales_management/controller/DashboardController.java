@@ -14,7 +14,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dashboard")
-@PreAuthorize("hasRole('ADMIN')")
 public class DashboardController {
     private final ProductService productService;
     private final SaleService saleService;

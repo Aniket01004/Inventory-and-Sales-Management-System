@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 import Layout from "./layout/Layout";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -20,22 +19,22 @@ import LowStock from "./pages/LowStock";
 function App() {
   return (
     <Routes>
-
-      {/* Public Route */}
+      {/* Public */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected Routes */}
+      {/* Protected */}
       <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>
 
-          <Route path="/dashboard" 
-          element={
-      <RoleProtectedRoute allowedRoles={["ADMIN"]}>
-        <Dashboard />
-      </RoleProtectedRoute>
-      } />
+          <Route
+            path="/dashboard"
+            element={
+              <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+                <Dashboard />
+              </RoleProtectedRoute>
+            }
+          />
 
-          {/* PRODUCTS */}
           <Route path="/products" element={<ProductList />} />
 
           <Route
@@ -48,13 +47,13 @@ function App() {
           />
 
           <Route
-            path="/products/update"
-            element={
-              <RoleProtectedRoute allowedRoles={["ADMIN"]}>
-                <UpdateProduct />
-              </RoleProtectedRoute>
-            }
-          />
+  path="/products/update/:id"
+  element={
+    <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+      <UpdateProduct />
+    </RoleProtectedRoute>
+  }
+/>
 
           <Route
             path="/products/delete"
@@ -64,8 +63,9 @@ function App() {
               </RoleProtectedRoute>
             }
           />
-<Route path="/products/low-stock" element={<LowStock />} />
-          {/* SALES */}
+
+          <Route path="/products/low-stock" element={<LowStock />} />
+
           <Route path="/sales/create" element={<CreateSale />} />
           <Route path="/sales/view" element={<ViewSales />} />
 
@@ -90,8 +90,7 @@ function App() {
         </Route>
       </Route>
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

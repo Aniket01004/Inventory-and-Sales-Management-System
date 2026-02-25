@@ -3,6 +3,7 @@ package com.example.inventory_sales_management.controller;
 import com.example.inventory_sales_management.model.Product;
 import com.example.inventory_sales_management.model.Sale;
 import com.example.inventory_sales_management.model.TransactionType;
+import com.example.inventory_sales_management.service.ImageService;
 import com.example.inventory_sales_management.service.ProductService;
 import com.example.inventory_sales_management.service.SaleService;
 import jakarta.validation.Valid;
@@ -21,7 +22,6 @@ import java.util.List;
 import java.util.UUID;
 import java.io.File;
 import java.nio.file.StandardCopyOption;
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -35,7 +35,9 @@ public class ProductController {
     }
 
     // Create
-    @PreAuthorize("hasRole('ADMIN')")
+    @Autowired
+    private ImageService imageService;
+
     @PostMapping("/with-image")
     public ResponseEntity<?> createProductWithImage(
             @RequestParam String name,
@@ -45,36 +47,19 @@ public class ProductController {
     ) {
         try {
 
-            // Absolute upload path
-            String uploadDir = System.getProperty("user.dir") + "/uploads/";
+            String imageUrl = imageService.uploadImage(image);
 
-            // Ensure directory exists
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-
-            // Generate unique filename
-            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-
-            Path filePath = Paths.get(uploadDir + fileName);
-
-            // Save file (replace if exists)
-            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            // Create product
             Product product = new Product();
             product.setName(name);
             product.setPrice(price);
             product.setQuantity(quantity);
-            product.setImageUrl(fileName);  // save filename in DB
+            product.setImageUrl(imageUrl);
 
             Product saved = productService.createProduct(product);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 
         } catch (Exception e) {
-            e.printStackTrace(); // important for debugging
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Image upload failed");
         }
@@ -99,7 +84,6 @@ public class ProductController {
     }
 
     // Update
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/with-image")
     public ResponseEntity<?> updateProductWithImage(
             @PathVariable Long id,
@@ -117,20 +101,8 @@ public class ProductController {
             product.setQuantity(quantity);
 
             if (image != null && !image.isEmpty()) {
-
-                String uploadDir = System.getProperty("user.dir") + "/uploads/";
-
-                File directory = new File(uploadDir);
-                if (!directory.exists()) {
-                    directory.mkdirs();
-                }
-
-                String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-                Path filePath = Paths.get(uploadDir + fileName);
-
-                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                product.setImageUrl(fileName);
+                String imageUrl = imageService.uploadImage(image);
+                product.setImageUrl(imageUrl);
             }
 
             Product updated = productService.updateProduct(id, product);
@@ -144,7 +116,6 @@ public class ProductController {
     }
 
     // Delete
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id){
         try{
@@ -155,7 +126,6 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found with id " + id);
         }
     }
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/stock")
     public ResponseEntity<?> updateStock(
             @PathVariable Long id,
@@ -172,7 +142,6 @@ public class ProductController {
 
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     @PostMapping("/{id}/sale")
     public ResponseEntity<?> createSale(
             @PathVariable Long id,
@@ -187,7 +156,6 @@ public class ProductController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     @GetMapping("/low-stock")
    public ResponseEntity<List<Product>> getLowStockProducts(
            @RequestParam(defaultValue = "5")Integer threshold

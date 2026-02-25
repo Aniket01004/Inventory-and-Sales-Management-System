@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/sales")
-@CrossOrigin(origins = "http://localhost:5173")
 public class SaleController {
 
     private final SaleService saleService;
@@ -19,7 +18,6 @@ public class SaleController {
         this.saleService = saleService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     @GetMapping
     public ResponseEntity<List<Sale>> getAllSales() {
         return ResponseEntity.ok(saleService.getAllSales());
