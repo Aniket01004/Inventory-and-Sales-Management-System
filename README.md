@@ -157,12 +157,12 @@ FRONTEND_URL=https://your-netlify-site.netlify.app
 VITE_API_URL=https://your-render-backend.onrender.com
 ```
 ### 🔒 Security Highlights
--Stateless JWT Authentication
--Spring Security Filter Chain
--Role-Based Method Authorization
--Protected API Endpoints
--Secure CORS Configuration
--Password Validation via Authentication Service
+- Stateless JWT Authentication
+- Spring Security Filter Chain
+- Role-Based Method Authorization
+- Protected API Endpoints
+- Secure CORS Configuration
+- Password Validation via Authentication Service
 
 ### Architecture Overview
 ```
