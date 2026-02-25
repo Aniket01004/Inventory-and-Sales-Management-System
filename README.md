@@ -7,8 +7,8 @@ The application is deployed using **Render (Backend)** and **Netlify (Frontend)*
 
 ## 🚀 Live Demo
 
-Frontend: [https://your-netlify-site.netlify.app](https://inventory-sales-app.netlify.app)  
-Backend API: [https://your-render-backend.onrender.com](https://app-deployment-hk0t.onrender.com)
+Frontend: https://inventory-sales-app.netlify.app
+Backend API: https://app-deployment-hk0t.onrender.com
 
 ---
 ## 🔐 Login Credentials
